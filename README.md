@@ -13,5 +13,5 @@ Deploy Mailu server with CI/CD on Elestio
 You can can open Mailu UI here:
 
     URL: https://[CI_CD_DOMAIN]
-    email:[ADMIN_EMAIL]
+    email: admin@[CI_CD_DOMAIN]
     password: [ADMIN_PASSWORD]

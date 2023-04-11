@@ -11,7 +11,7 @@ services:
     image: redis:alpine
     restart: always
     volumes:
-      - "./mailu/redis:/data"
+      - "./mailuredis:/data"
     depends_on:
       - resolver
     dns:
@@ -29,16 +29,19 @@ services:
     ports:
       - "172.17.0.1:8002:80"
       - "172.17.0.1:2443:443"
-      - "172.17.0.1:25:25"
+      - "172.17.0.1:26:25"
       - "172.17.0.1:465:465"
       - "172.17.0.1:587:587"
       - "172.17.0.1:110:110"
       - "172.17.0.1:995:995"
       - "172.17.0.1:143:143"
       - "172.17.0.1:993:993"
+    networks:
+      - default
+      - radicale
     volumes:
-      - "./mailu/certs:/certs"
-      - "./mailu/overrides/nginx:/overrides:ro"
+      - "./mailucerts:/certs"
+      - "./mailuoverrides/nginx:/overrides:ro"
     depends_on:
       - resolver
     dns:
@@ -61,8 +64,8 @@ services:
       options:
         tag: mailu-admin
     volumes:
-      - "./mailu/data:/data"
-      - "./mailu/dkim:/dkim"
+      - "./mailudata:/data"
+      - "./mailudkim:/dkim"
     depends_on:
       - redis
       - resolver
@@ -78,8 +81,8 @@ services:
       options:
         tag: mailu-imap
     volumes:
-      - "./mailu/mail:/mail"
-      - "./mailu/overrides/dovecot:/overrides:ro"
+      - "./mailumail:/mail"
+      - "./mailuoverrides/dovecot:/overrides:ro"
     depends_on:
       - front
       - resolver
@@ -95,8 +98,8 @@ services:
       options:
         tag: mailu-smtp
     volumes:
-      - "./mailu/mailqueue:/queue"
-      - "./mailu/overrides/postfix:/overrides:ro"
+      - "./mailumailqueue:/queue"
+      - "./mailuoverrides/postfix:/overrides:ro"
     depends_on:
       - front
       - resolver
@@ -107,7 +110,8 @@ services:
     image: ${DOCKER_ORG:-ghcr.io/mailu}/${DOCKER_PREFIX:-}oletools:${MAILU_VERSION:-2.0}
     hostname: oletools
     restart: always
-
+    networks:
+      - noinet
     depends_on:
       - resolver
     dns:
@@ -122,26 +126,47 @@ services:
       driver: journald
       options:
         tag: mailu-antispam
+    networks:
+      - default
+      - noinet
     volumes:
-      - "./mailu/filter:/var/lib/rspamd"
-      - "./mailu/overrides/rspamd:/overrides:ro"
+      - "./mailufilter:/var/lib/rspamd"
+      - "./mailuoverrides/rspamd:/overrides:ro"
     depends_on:
       - front
       - redis
       - oletools
+      - antivirus
       - resolver
     dns:
       - 192.168.203.254
 
   # Optional services
+  antivirus:
+    image: ${DOCKER_ORG:-ghcr.io/mailu}/${DOCKER_PREFIX:-}clamav:${MAILU_VERSION:-2.0}
+    restart: always
+    env_file: mailu.env
+    volumes:
+      - "./mailufilter:/data"
+    depends_on:
+      - resolver
+    dns:
+      - 192.168.203.254
 
+  webdav:
+    image: ${DOCKER_ORG:-ghcr.io/mailu}/${DOCKER_PREFIX:-}radicale:${MAILU_VERSION:-2.0}
+    restart: always
+    volumes:
+      - "./mailudav:/data"
+    networks:
+      - radicale
 
   fetchmail:
     image: ${DOCKER_ORG:-ghcr.io/mailu}/${DOCKER_PREFIX:-}fetchmail:${MAILU_VERSION:-2.0}
     restart: always
     env_file: mailu.env
     volumes:
-      - "./mailu/data/fetchmail:/data"
+      - "./mailudata/fetchmail:/data"
     depends_on:
       - admin
       - smtp
@@ -151,3 +176,16 @@ services:
       - 192.168.203.254
 
   # Webmail
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.203.0/24
+  radicale:
+    driver: bridge
+  noinet:
+    driver: bridge
+    internal: true

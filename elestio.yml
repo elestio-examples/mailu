@@ -35,5 +35,5 @@ lifeCycleConfig:
 webUI:
   - url: "https://[CI_CD_DOMAIN]"
     label: "Mailu Admin"
-    login: "[ADMIN_EMAIL]"
+    login: "admin@[CI_CD_DOMAIN]"
     password: "[ADMIN_PASSWORD]"
