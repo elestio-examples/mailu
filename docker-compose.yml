@@ -36,8 +36,6 @@ services:
       - "172.17.0.1:995:995"
       - "172.17.0.1:143:143"
       - "172.17.0.1:993:993"
-    networks:
-      - default
     volumes:
       - "./mailu/certs:/certs"
       - "./mailu/overrides/nginx:/overrides:ro"
@@ -109,8 +107,7 @@ services:
     image: ${DOCKER_ORG:-ghcr.io/mailu}/${DOCKER_PREFIX:-}oletools:${MAILU_VERSION:-2.0}
     hostname: oletools
     restart: always
-    networks:
-      - noinet
+
     depends_on:
       - resolver
     dns:
@@ -125,9 +122,6 @@ services:
       driver: journald
       options:
         tag: mailu-antispam
-    networks:
-      - default
-      - noinet
     volumes:
       - "./mailu/filter:/var/lib/rspamd"
       - "./mailu/overrides/rspamd:/overrides:ro"
