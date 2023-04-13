@@ -36,6 +36,9 @@ services:
       - "172.17.0.1:995:995"
       - "172.17.0.1:143:143"
       - "172.17.0.1:993:993"
+    networks:
+      - default
+      - radicale
     volumes:
       - "./mailucerts:/certs"
       - "./mailuoverrides/nginx:/overrides:ro"
@@ -48,6 +51,9 @@ services:
     image: ${DOCKER_ORG:-ghcr.io/mailu}/${DOCKER_PREFIX:-}unbound:${MAILU_VERSION:-2.0}
     env_file: mailu.env
     restart: always
+    networks:
+      default:
+        ipv4_address: 192.168.203.254
 
   admin:
     image: ${DOCKER_ORG:-ghcr.io/mailu}/${DOCKER_PREFIX:-}admin:${MAILU_VERSION:-2.0}
@@ -104,6 +110,8 @@ services:
     image: ${DOCKER_ORG:-ghcr.io/mailu}/${DOCKER_PREFIX:-}oletools:${MAILU_VERSION:-2.0}
     hostname: oletools
     restart: always
+    networks:
+      - noinet
     depends_on:
       - resolver
     dns:
@@ -118,6 +126,9 @@ services:
       driver: journald
       options:
         tag: mailu-antispam
+    networks:
+      - default
+      - noinet
     volumes:
       - "./mailufilter:/var/lib/rspamd"
       - "./mailuoverrides/rspamd:/overrides:ro"
@@ -147,6 +158,8 @@ services:
     restart: always
     volumes:
       - "./mailudav:/data"
+    networks:
+      - radicale
 
   fetchmail:
     image: ${DOCKER_ORG:-ghcr.io/mailu}/${DOCKER_PREFIX:-}fetchmail:${MAILU_VERSION:-2.0}
@@ -161,3 +174,16 @@ services:
       - resolver
     dns:
       - 192.168.203.254
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.203.0/24
+  radicale:
+    driver: bridge
+  noinet:
+    driver: bridge
+    internal: true
