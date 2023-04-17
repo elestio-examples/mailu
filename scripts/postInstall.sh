@@ -5,4 +5,4 @@ set -o allexport; source .env; set +o allexport;
 echo "Waiting for software to be ready ..."
 sleep 120s;
 
-docker-compose exec admin flask mailu admin admin ${DOMAIN} ${ADMIN_PASSWORD}
+docker-compose exec -T admin flask mailu admin admin ${DOMAIN} ${ADMIN_PASSWORD}
