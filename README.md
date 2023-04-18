@@ -10,7 +10,7 @@ Deploy Mailu server with CI/CD on Elestio
 
 # Once deployed ...
 
-You can can open Mailu UI here:
+You can open Mailu UI here:
 
     URL: https://[CI_CD_DOMAIN]
     email: admin@[CI_CD_DOMAIN]
