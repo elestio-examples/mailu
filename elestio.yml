@@ -49,3 +49,7 @@ webUI:
     label: "Mailu Admin"
     login: "[ADMIN_EMAIL]"
     password: "[ADMIN_PASSWORD]"
+  - url: "https://[CI_CD_DOMAIN]"
+    label: "Roundcube webmail"
+    login: "[ADMIN_EMAIL]"
+    password: "[ADMIN_PASSWORD]"
