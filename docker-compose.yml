@@ -30,7 +30,7 @@ services:
       - ROUNDCUBEMAIL_DB_TYPE=sqlite
       - ROUNDCUBEMAIL_SKIN=elastic
       - ROUNDCUBEMAIL_DEFAULT_HOST=172.17.0.1
-      - ROUNDCUBEMAIL_SMTP_SERVER=143
+      - ROUNDCUBEMAIL_SMTP_SERVER=172.17.0.1
 
   # Core services
   front:
