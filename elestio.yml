@@ -2,11 +2,19 @@ ports:
   - protocol: "HTTPS"
     targetProtocol: "HTTP"
     listeningPort: "443"
-    targetPort: "8002"
+    targetPort: "9002"
     targetIP: "172.17.0.1"
     public: true
     path: "/"
     isAuth: false
+  - protocol: "HTTPS"
+    targetProtocol: "HTTP"
+    listeningPort: "16443"
+    targetPort: "8002"
+    targetIP: "172.17.0.1"
+    public: true
+    path: "/"
+    isAuth: false    
 environments:
   - key: "SOFTWARE_VERSION_TAG"
     value: "2.0"
@@ -37,7 +45,7 @@ lifeCycleConfig:
   postRestoreCommand: "./scripts/postRestore.sh"
   postDeployCommand: "./scripts/postDeploy.sh"
 webUI:
-  - url: "https://[CI_CD_DOMAIN]/admin"
+  - url: "https://[CI_CD_DOMAIN]:16443/admin"
     label: "Mailu Admin"
     login: "[ADMIN_EMAIL]"
     password: "[ADMIN_PASSWORD]"
