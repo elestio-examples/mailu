@@ -16,6 +16,21 @@ services:
       - resolver
     dns:
       - 192.168.203.254
+      
+      
+  roundcubemail:
+    image: roundcube/roundcubemail:latest
+    restart: always
+    volumes:
+      - ./rc/www:/var/www/html
+      - ./rc/db/sqlite:/var/roundcube/db
+    ports:
+      - 172.17.0.1:9002:80
+    environment:
+      - ROUNDCUBEMAIL_DB_TYPE=sqlite
+      - ROUNDCUBEMAIL_SKIN=elastic
+      - ROUNDCUBEMAIL_DEFAULT_HOST=172.17.0.1
+      - ROUNDCUBEMAIL_SMTP_SERVER=143
 
   # Core services
   front:
