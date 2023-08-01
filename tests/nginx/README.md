@@ -86,7 +86,7 @@ Here are some example snippets to help you get started creating a container.
 
         # Core services
         front:
-            image: elestio4test/nginx:${SOFTWARE_VERSION_TAG}
+            image: elestio4test/mailu-nginx:${SOFTWARE_VERSION_TAG}
             restart: always
             env_file: .env
             logging:
@@ -115,7 +115,7 @@ Here are some example snippets to help you get started creating a container.
                 - 192.168.203.254
 
         resolver:
-            image: elestio4test/unbound:${SOFTWARE_VERSION_TAG}
+            image: elestio4test/mailu-unbound:${SOFTWARE_VERSION_TAG}
             env_file: .env
             restart: always
             networks:
@@ -123,7 +123,7 @@ Here are some example snippets to help you get started creating a container.
                     ipv4_address: 192.168.203.254
 
         admin:
-            image: elestio4test/admin:${SOFTWARE_VERSION_TAG}
+            image: elestio4test/mailu-admin:${SOFTWARE_VERSION_TAG}
             restart: always
             env_file: .env
             logging:
@@ -140,7 +140,7 @@ Here are some example snippets to help you get started creating a container.
                 - 192.168.203.254
 
         imap:
-            image: elestio4test/dovecot:${SOFTWARE_VERSION_TAG}
+            image: elestio4test/mailu-dovecot:${SOFTWARE_VERSION_TAG}
             restart: always
             env_file: .env
             logging:
@@ -157,7 +157,7 @@ Here are some example snippets to help you get started creating a container.
                 - 192.168.203.254
 
         smtp:
-            image: elestio4test/postfix:${SOFTWARE_VERSION_TAG}
+            image: elestio4test/mailu-postfix:${SOFTWARE_VERSION_TAG}
             restart: always
             env_file: .env
             logging:
@@ -174,7 +174,7 @@ Here are some example snippets to help you get started creating a container.
                 - 192.168.203.254
 
         oletools:
-            image: elestio4test/oletools:${SOFTWARE_VERSION_TAG}
+            image: elestio4test/mailu-oletools:${SOFTWARE_VERSION_TAG}
             hostname: oletools
             restart: always
             networks:
@@ -185,7 +185,7 @@ Here are some example snippets to help you get started creating a container.
                 - 192.168.203.254
 
         antispam:
-            image: elestio4test/rspamd:${SOFTWARE_VERSION_TAG}
+            image: elestio4test/mailu-rspamd:${SOFTWARE_VERSION_TAG}
             hostname: antispam
             restart: always
             env_file: .env
@@ -210,7 +210,7 @@ Here are some example snippets to help you get started creating a container.
 
         # Optional services
         antivirus:
-            image: elestio4test/clamav:${SOFTWARE_VERSION_TAG}
+            image: elestio4test/mailu-clamav:${SOFTWARE_VERSION_TAG}
             restart: always
             env_file: .env
             volumes:
@@ -221,7 +221,7 @@ Here are some example snippets to help you get started creating a container.
                 - 192.168.203.254
 
         webdav:
-            image: elestio4test/radicale:${SOFTWARE_VERSION_TAG}
+            image: elestio4test/mailu-radicale:${SOFTWARE_VERSION_TAG}
             restart: always
             volumes:
                 - "./mailudav:/data"
@@ -229,7 +229,7 @@ Here are some example snippets to help you get started creating a container.
                 - radicale
 
         fetchmail:
-            image: elestio4test/fetchmail:${SOFTWARE_VERSION_TAG}
+            image: elestio4test/mailu-fetchmail:${SOFTWARE_VERSION_TAG}
             restart: always
             env_file: .env
             volumes:
